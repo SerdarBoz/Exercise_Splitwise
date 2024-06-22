@@ -1,0 +1,42 @@
+﻿@model Splitwise.Models.Person
+
+@{
+    ViewData["Title"] = "DetailsPayments";
+}
+
+<h1>Betalingen van @Model.Name</h1>
+
+@if (Model.Payments != null && Model.Payments.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Amount</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var payment in Model.Payments)
+            {
+                <tr>
+                    <td>@payment.Description</td>
+                    <td>@payment.Amount</td>
+                    <td>
+                        <form asp-action="DeletePayment" method="post">
+                            <input type="hidden" name="paymentId" value="@payment.Id" />
+                            <input type="hidden" name="personId" value="@Model.Id" />
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No payments found for this person.</p>
+}
+
+<a asp-action="Details" asp-route-id="@Model.BalanceId">Back to Balance Details</a>

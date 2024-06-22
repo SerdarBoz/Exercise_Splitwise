@@ -1,0 +1,68 @@
+﻿@model Splitwise.Models.Balance
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div>
+    <h4>Balans informatie</h4>
+    <hr />
+    <dl class="row">
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+</div>
+
+<p>
+    <a asp-action="AddPerson" asp-route-balanceId="@Model.Id">Voeg een persoon toe</a>
+</p>
+
+@if (Model.Persons != null && Model.Persons.Any())
+{
+    <h4>Persons</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Persons.First().Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Persons.First().BalanceTotal)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in Model.Persons)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => person.Name)
+                    </td>
+                    <td>
+                        @String.Format("{0:F2}", person.BalanceTotal)
+                    </td>
+                    <td>
+                        <a asp-action="DetailsPayments" asp-route-id="@person.Id">Details</a> |
+                        <a asp-action="AddPayment" asp-route-personId="@person.Id">Add Payment</a> |
+                        <form asp-action="DeletePerson" method="post" class="d-inline">
+                            <input type="hidden" name="personId" value="@person.Id" />
+                            <input type="hidden" name="balanceId" value="@Model.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No persons found for this balance.</p>
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
